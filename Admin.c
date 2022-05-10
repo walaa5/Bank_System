@@ -67,71 +67,79 @@ int main()
 
 		if(strcmp(admin_name, "admin") == 0 && strcmp(admin_password, "0000") == 0)
 		{
-			//system("cls");
-			printf("welcome to Admin window \n");
-			printf("please choose what you want to do: \n");
-			printf("1 - Create New Account\n");
-			printf("2 - Open Existing Account\n");
-			printf("3 - Exit System\n");
-
-			scanf("%d", &admin_option);
-			if(admin_option == 1)
+			while (1)
 			{
-				// create new account
-				create_account();
+			
+				//system("cls");
+				printf("\n welcome to Admin window \n");
+				printf("please choose what you want to do: \n");
+				printf("1 - Create New Account\n");
+				printf("2 - Open Existing Account\n");
+				printf("3 - Exit System\n");
 
-				// print elements and size of the list
-				size = List_intSize(&bank);
-				printf("The size of the list = %d\n", size);
+				scanf("%d", &admin_option);
+				if(admin_option == 1)
+				{
+					// create new account
+					create_account();
 
-				printf("The elements of the list are : \n");
-				List_voidPrint(&bank);
-			}
+					// print elements and size of the list
+					size = List_intSize(&bank);
+					printf("The size of the list = %d\n", size);
 
-			else if(admin_option == 2)
-			{
-				// open existing account and provide number of options
-				int req_id = 0 ; 
-				printf("Enter Client Bank Account ID: \n");
-				scanf("%i", &req_id);
-				Account acc ;
-				int flag = List_searchid(&bank, req_id, &acc);
-				if (flag == -1){
-					printf("No account with given bank ID \n");
+					printf("The elements of the list are : \n");
+					List_voidPrint(&bank);
 				}
-				
-				else{
-					int open_option ;
+
+				else if(admin_option == 2)
+				{
+					// open existing account and provide number of options
+					int req_id = 0 ; 
+					printf("Enter Client Bank Account ID: \n");
+					scanf("%i", &req_id);
+					Account acc ;
+					int flag = List_searchid(&bank, req_id, &acc);
+
+					if (flag == -1){
+						printf("No account with given bank ID \n");
+					}
 					
-					printf("welcome to Open account window \n");
-					printf("please choose what you want to do: \n");
-					printf("1 - Make transaction\n");
-					printf("2 - Change account status\n");
-					printf("3 - Get Cash\n");
-					printf("4 - Depoist into Account\n");
-					scanf("%i", &open_option);
+					else{
+						int open_option ;
+						
+						printf("welcome to Open account window \n");
+						printf("please choose what you want to do: \n");
+						printf("1 - Make transaction\n");
+						printf("2 - Change account status\n");
+						printf("3 - Get Cash\n");
+						printf("4 - Depoist into Account\n");
+						scanf("%i", &open_option);
 
-					if (open_option == 1){
-						make_transaction(&acc);
+						if (open_option == 1){
+							make_transaction(&acc);
+
+						}
+						else if(open_option == 2){
+							change_status(&acc);
+						}
+						else if (open_option == 3){
+							get_cash(&acc);
+						}
+						else if (open_option == 4){
+							depoist(&acc);
+							//printf("%s", acc.full_name);
+							
+						}
 
 					}
-					else if(open_option == 2){
-						change_status(&acc);
-					}
-					else if (open_option == 3){
-						get_cash(&acc);
-					}
-					else if (open_option == 4){
-						depoist(&acc);
-					}
-
+					
 				}
-				
-			}
 
-			else if(admin_option == 3)
-			{
-				// Exit system
+				else if(admin_option == 3)
+				{
+					// Exit system
+					break;
+				}
 			}
 			
 		}
