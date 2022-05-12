@@ -51,7 +51,7 @@ void List_voidDestroyList(List* pl);*/
     printf("\n===================================\n");
 
     // retrive element from list 
-   /* List_voidRetriveList(2, &L, &value);
+    List_voidRetriveList(2, &L, &value);
     printf("the retrived value = %d\n", value);
     printf("\n===================================\n");
 
@@ -275,16 +275,16 @@ void List_voidAddList(List* pl, Account new_account)
 
 
 /***
- * function to search element of a List by bank account id
+ * function to search element of a List by bank account id and return node of account if exists
 ***/
-int List_searchid(List* pl, int search_id, Account* pd)
+int List_searchid(List* pl, int search_id, Account** acc_node)
 {
     ListNode* q= pl->head;
 
     while(q != NULL)
     {
         if (q->new_acc.bank_id == search_id){
-            *pd =  q->new_acc;
+            *acc_node = &(q->new_acc);
             return 0;
         }
         q= q->Next;

@@ -49,7 +49,7 @@ int  List_intIsFull(List* pl);
 int  List_intSize(List* pl);
 void List_voidPrint(List* pl);
 void List_voidDestroyList(List* pl);
-int List_searchid(List* pl, int search_id, Account* pd);
+int List_searchid(List* pl, int search_id, Account** acc_node);
 
 
 #endif

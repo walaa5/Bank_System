@@ -1,6 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <ctype.h>
+#include<string.h>
 
 #include "linkedList.h"
 #include "linkedList.c"
@@ -15,10 +17,10 @@ int current_id = 1;
 List bank;
 
 void create_account(void);
-void make_transaction(Account* acc);
-void get_cash(Account* acc);
-void change_status(Account* acc);
-void depoist(Account* acc);
+void make_transaction(Account* acc_node);
+void get_cash(Account* acc_node);
+void change_status(Account* acc_node);
+void depoist(Account* acc_node);
 
 int main()
 {
@@ -32,15 +34,6 @@ int main()
     // intialize a list         
     // List l;
 	
-	/* trial
-	create_account();
-	Account acc ;
-	List_searchid(&bank, 1, &acc);
-	depoist(&acc);
-	create_account();
-	make_transaction(&acc);
-	*/
-
     List_voidInit(&bank);
 
 	// ***********************************************************  //
@@ -94,11 +87,20 @@ int main()
 				else if(admin_option == 2)
 				{
 					// open existing account and provide number of options
-					int req_id = 0 ; 
+					int search_id = 0 ; 
 					printf("Enter Client Bank Account ID: \n");
-					scanf("%i", &req_id);
-					Account acc ;
-					int flag = List_searchid(&bank, req_id, &acc);
+					scanf("%i", &search_id);
+					
+					
+					Account* acc_node;
+					
+					int flag = List_searchid(&bank, search_id, &acc_node);
+					
+					/*node of linked list sanity check
+					printf("%s\n", acc_node->full_name);
+					printf("address of node: %p\n", acc_node);
+					*/
+
 
 					if (flag == -1){
 						printf("No account with given bank ID \n");
@@ -116,18 +118,19 @@ int main()
 						scanf("%i", &open_option);
 
 						if (open_option == 1){
-							make_transaction(&acc);
+							make_transaction(acc_node);
 
 						}
 						else if(open_option == 2){
-							change_status(&acc);
+							change_status(acc_node);
 						}
 						else if (open_option == 3){
-							get_cash(&acc);
+							get_cash(acc_node);
 						}
 						else if (open_option == 4){
-							depoist(&acc);
-							//printf("%s", acc.full_name);
+							depoist(acc_node);
+							
+							
 							
 						}
 
@@ -188,6 +191,10 @@ void create_account()
 	printf("enter your status: ");
 	fflush(stdin);
 	gets(new_acc.status);
+	// not case sensitive
+	for (int i = 0; i < strlen(new_acc.status); ++i) {
+        new_acc.status[i] =  tolower((unsigned char) new_acc.status[i]);
+    }
 
 	printf("your bank_id is: %i\n", current_id);
 	new_acc.bank_id = current_id;
@@ -204,33 +211,34 @@ void create_account()
 }
 
 
-void make_transaction(Account* acc){
+void make_transaction(Account* acc_node){
 
-	Account trans_acc ;
+	Account* trans_node ;
 
 	int req_id = 0 ; 
 	printf("Enter Transfer Client Bank Account ID: \n");
 	scanf("%i", &req_id);
-	int flag = List_searchid(&bank, req_id, &trans_acc);
+
+	int flag = List_searchid(&bank, req_id, &trans_node);
 	if (flag == -1){
 		printf("No account with given bank ID \n");
 		return;
 	}
 				
 	else{
-		if (strcmp(acc->status, "Active") == 0){
-			if (strcmp(trans_acc.status, "Active") == 0){
+		if (strcmp(acc_node->status, "active") == 0){
+			if (strcmp(trans_node->status, "active") == 0){
 				double trans_amount ; 
 				printf("Enter amount to tranfer: ");
 				scanf("%lf", &trans_amount);
 
-				if (trans_amount > acc->balance){
+				if (trans_amount > acc_node->balance){
 					printf("Not enough in balance, couldn't complete\n");
 					return;
 				}
 				else{
-					acc->balance -= trans_amount ;
-					trans_acc.balance += trans_amount;
+					acc_node->balance -= trans_amount ;
+					trans_node->balance += trans_amount;
 					printf("Transaction completed\n");
 					return;
 				}
@@ -252,49 +260,49 @@ void make_transaction(Account* acc){
 
 }
 
-void change_status(Account* acc){
+void change_status(Account* acc_node){
 	int opt ; 
 	printf("1 for Active, 2 for Restricted, 3 for Closed");
 	scanf("%i", &opt);
 
 	if (opt == 1){
-		strcpy(acc->status, "Active");
+		strcpy(acc_node->status, "Active");
 	}
 	else if (opt == 2){
-		strcpy(acc->status, "Restricted");
+		strcpy(acc_node->status, "Restricted");
 	}
 	else if (opt == 3){
-		strcpy(acc->status, "Closed");
+		strcpy(acc_node->status, "Closed");
 	}
 
 }
 
-void get_cash(Account* acc){
+void get_cash(Account* acc_node){
 	double withdrawal ;
 	printf("Enter amount to withdraw: ");
 	scanf("%lf", &withdrawal);
 
-	if (withdrawal > acc->balance){
+	if (withdrawal > acc_node->balance){
 		printf("Not enough cash in balance\n");
 		return;
 	}
 	else{
-		acc->balance -= withdrawal;
+		acc_node->balance -= withdrawal;
 		printf("Cash withdrawal completed\n");
-		printf("Current Balance: %lf\n", acc->balance);
+		printf("Current Balance: %lf\n", acc_node->balance);
 		return;
 	}
 
 }
 
-void depoist(Account* acc){
+void depoist(Account* acc_node){
 	double into ;
 	printf("Enter amount to depoist: ");
 	scanf("%lf", &into);
 
-	acc->balance += into;
+	acc_node->balance += into;
 	printf("Cash depoisted completed\n");
-	printf("Current Balance: %lf\n", acc->balance);
+	printf("Current Balance: %lf\n", acc_node->balance);
 	return;
 
 
