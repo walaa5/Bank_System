@@ -266,13 +266,13 @@ void change_status(Account* acc_node){
 	scanf("%i", &opt);
 
 	if (opt == 1){
-		strcpy(acc_node->status, "Active");
+		strcpy(acc_node->status, "active");
 	}
 	else if (opt == 2){
-		strcpy(acc_node->status, "Restricted");
+		strcpy(acc_node->status, "restricted");
 	}
 	else if (opt == 3){
-		strcpy(acc_node->status, "Closed");
+		strcpy(acc_node->status, "closed");
 	}
 
 }
